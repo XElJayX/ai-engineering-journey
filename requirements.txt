@@ -1,0 +1,8 @@
+# Core labs are numpy-only. The "Use it" experiments add these:
+numpy
+torch
+transformers
+sentence-transformers
+tiktoken
+pydantic
+# LLM experiments (11/01-11/06) call a local Ollama server with llama3.2: https://ollama.com
