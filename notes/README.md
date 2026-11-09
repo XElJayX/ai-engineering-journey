@@ -52,6 +52,8 @@ One sheet per finished lesson, written so I can come back after weeks away and r
 | 19 | 11/05 Context Engineering | Done 2026-11-03 (3/3) | Fixed parts first (system, query, reserve), then docs by score (skip misfits), then history newest-first (stop at misfit). Query last, best docs at the edges. Ollama's default 2,048 window silently cut 4,645 tokens from the front, so assert seen ≥ 0.95 × sent. top-24 = 7× cost for zero gain. | [11-05](11-05-context-engineering.md) |
 | 20 | 11/06 RAG | Done 2026-11-04 (3/3) | Offline (chunk, embed, store) + online (embed query, top-k, assemble, generate) share one contract. Grade the 2×2: gold retrieved × correct → success / generation / retrieval failure / suspicious, plus abstain vs hallucination. Plain "the Company" chunks 10/20; `[Company 10-K FY]` header 20/20. Wrong context → 10 confident wrong figures with citations. | [11-06](11-06-rag.md) |
 | 21 | 11/07 Advanced RAG | Done 2026-11-05 (3/3) | BM25 (exact tokens: codes 16/16) and vectors (meaning: paraphrase 16/16) are blind in opposite places. RRF merge fell *below* vector (32 vs 39/48); cross-encoder rerank of the top-50 → 44/48 at 58 ms. Retrieve wide, rerank narrow. | [11-07](11-07-advanced-rag.md) |
+| 22 | 11/08 LoRA & QLoRA | Done 2026-11-05 (3/3) | Frozen W + trainable B·A (B = 0 init). GPT-2: 0.24% params, Adam 2.2 MB vs 949 MB, format 40/40 like full FT (3-shot: 7/40), exact only 26/40 (digits). LoRA still forgot (ppl 26.4 → 33.6). NF4 +1.3 ppl vs int4 +3.0. Merge = same model, no overhead. | [11-08](11-08-lora.md) |
+| 23 | 10/06 Instruction Tuning (SFT) | Done 2026-11-06 (3/3) | Same next-token loss, but graded only on assistant tokens + `<|im_end|>` (labels -100 elsewhere, mean over kept). Base GPT-2: 0/45 stops → SFT 45/45, 37/45 correct on unseen prompts (facts from pre-training). Masked end token: 0/45 stops. No mask: writes prompts. lr 3e-4: ppl 2,315. | [10-06](10-06-instruction-tuning-sft.md) |
 
 ## How it all connects
 
@@ -102,6 +104,14 @@ flowchart LR
     Y["11/07 Advanced RAG<br/>BM25, RRF, cross-encoder rerank"] --> R
     X --> Y
     U --> Y
+    Z["11/08 LoRA / QLoRA<br/>low-rank adapters, merge, NF4"] --> G
+    H --> Z
+    M --> Z
+    D --> Z
+    AA["10/06 SFT<br/>chat template, masked loss, stop token"] --> G
+    N --> AA
+    D --> AA
+    AA --> Z
 ```
 
 - **Cosine similarity** is how a vector database picks the "relevant" chunks.
