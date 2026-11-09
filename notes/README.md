@@ -54,6 +54,7 @@ One sheet per finished lesson, written so I can come back after weeks away and r
 | 21 | 11/07 Advanced RAG | Done 2026-11-05 (3/3) | BM25 (exact tokens: codes 16/16) and vectors (meaning: paraphrase 16/16) are blind in opposite places. RRF merge fell *below* vector (32 vs 39/48); cross-encoder rerank of the top-50 → 44/48 at 58 ms. Retrieve wide, rerank narrow. | [11-07](11-07-advanced-rag.md) |
 | 22 | 11/08 LoRA & QLoRA | Done 2026-11-05 (3/3) | Frozen W + trainable B·A (B = 0 init). GPT-2: 0.24% params, Adam 2.2 MB vs 949 MB, format 40/40 like full FT (3-shot: 7/40), exact only 26/40 (digits). LoRA still forgot (ppl 26.4 → 33.6). NF4 +1.3 ppl vs int4 +3.0. Merge = same model, no overhead. | [11-08](11-08-lora.md) |
 | 23 | 10/06 Instruction Tuning (SFT) | Done 2026-11-06 (3/3) | Same next-token loss, but graded only on assistant tokens + `<|im_end|>` (labels -100 elsewhere, mean over kept). Base GPT-2: 0/45 stops → SFT 45/45, 37/45 correct on unseen prompts (facts from pre-training). Masked end token: 0/45 stops. No mask: writes prompts. lr 3e-4: ppl 2,315. | [10-06](10-06-instruction-tuning-sft.md) |
+| 24 | 10/08 DPO | Done 2026-11-09 (3/3) | Implicit reward β·log(π/π_ref); loss −log σ(r_w − r_l), ln 2 at step 0. GPT-2 concise > chatty: DPO lr 5e-7 13% → 21–30%, SimPO 53%, SFT on winners 100%. lr 5e-6: loss 0, winner −2.4, loser −100, collapse (0% concise); + SFT term → 99%. Pref accuracy was 100% on every run, so read generations. | [10-08](10-08-dpo.md) |
 
 ## How it all connects
 
@@ -112,6 +113,10 @@ flowchart LR
     N --> AA
     D --> AA
     AA --> Z
+    AB["10/08 DPO<br/>implicit reward, beta, reference model"] --> G
+    AA --> AB
+    D --> AB
+    Z --> AB
 ```
 
 - **Cosine similarity** is how a vector database picks the "relevant" chunks.
