@@ -55,6 +55,7 @@ One sheet per finished lesson, written so I can come back after weeks away and r
 | 22 | 11/08 LoRA & QLoRA | Done 2026-11-05 (3/3) | Frozen W + trainable B·A (B = 0 init). GPT-2: 0.24% params, Adam 2.2 MB vs 949 MB, format 40/40 like full FT (3-shot: 7/40), exact only 26/40 (digits). LoRA still forgot (ppl 26.4 → 33.6). NF4 +1.3 ppl vs int4 +3.0. Merge = same model, no overhead. | [11-08](11-08-lora.md) |
 | 23 | 10/06 Instruction Tuning (SFT) | Done 2026-11-06 (3/3) | Same next-token loss, but graded only on assistant tokens + `<|im_end|>` (labels -100 elsewhere, mean over kept). Base GPT-2: 0/45 stops → SFT 45/45, 37/45 correct on unseen prompts (facts from pre-training). Masked end token: 0/45 stops. No mask: writes prompts. lr 3e-4: ppl 2,315. | [10-06](10-06-instruction-tuning-sft.md) |
 | 24 | 10/08 DPO | Done 2026-11-09 (3/3) | Implicit reward β·log(π/π_ref); loss −log σ(r_w − r_l), ln 2 at step 0. GPT-2 concise > chatty: DPO lr 5e-7 13% → 21–30%, SimPO 53%, SFT on winners 100%. lr 5e-6: loss 0, winner −2.4, loser −100, collapse (0% concise); + SFT term → 99%. Pref accuracy was 100% on every run, so read generations. | [10-08](10-08-dpo.md) |
+| 25 | 11/09 Function Calling | Done 2026-11-10 (3/3) | Model proposes JSON; my code validates, runs, returns a `tool` message, loops to max_iters. Never raise (orphan tool_call_id). llama3.2: closed-book 0/10, strict 3/10, lenient 5/10 (string years), growth 0/5 (can't chain), vague 0/10 + 3 wrong numbers, 0 retries after errors, cap stopped a never-ready tool at 8. | [11-09](11-09-function-calling.md) |
 
 ## How it all connects
 
@@ -117,6 +118,10 @@ flowchart LR
     AA --> AB
     D --> AB
     Z --> AB
+    AC["11/09 Function calling<br/>tool loop, validation, max_iters"] --> G
+    S --> AC
+    P --> AC
+    W --> AC
 ```
 
 - **Cosine similarity** is how a vector database picks the "relevant" chunks.
